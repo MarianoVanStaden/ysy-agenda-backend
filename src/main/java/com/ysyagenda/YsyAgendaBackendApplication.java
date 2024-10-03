@@ -26,6 +26,7 @@ public class YsyAgendaBackendApplication {
             TurnoRepository turnoRepository,
             EspecialidadRepository especialidadRepository) {
         return (args) -> {
+            //Acá genero registros para poder testear las APIs
             // Guardar 5 pacientes
             pacienteRepository.save(new Paciente("Martina", "Palleiro", "12345678", "martu@gmail.com"));
             pacienteRepository.save(new Paciente("Rocio", "Villanueva", "23456789", "rovillanueva@yahoo.com"));
