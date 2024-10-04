@@ -27,6 +27,7 @@ public class YsyAgendaBackendApplication {
             EspecialidadRepository especialidadRepository) {
         return (args) -> {
             //Acá genero registros para poder testear las APIs
+
             // Guardar 5 pacientes
             pacienteRepository.save(new Paciente("Martina", "Palleiro", "12345678", "martu@gmail.com"));
             pacienteRepository.save(new Paciente("Rocio", "Villanueva", "23456789", "rovillanueva@yahoo.com"));
@@ -51,8 +52,6 @@ public class YsyAgendaBackendApplication {
             especialidadRepository.save(new Especialidad("Ginecología"));
             especialidadRepository.save(new Especialidad("Psiquiatría"));
 
-
-            // Agrega 18 más...
 
             // Guardar 20 turnos (ejemplo usando fechas)
             turnoRepository.save(new Turno(pacienteRepository.findByNombre("Mariano").get(0), doctorRepository.findByEspecialidad("Neurología").get(0), LocalDateTime.of(2024, 10, 5, 10, 0)));
