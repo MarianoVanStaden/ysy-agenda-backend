@@ -1,5 +1,6 @@
 package com.ysyagenda.controller;
 
+import org.springframework.http.HttpStatus;
 import com.ysyagenda.entity.Paciente;
 import com.ysyagenda.repository.PacienteRepository;
 import org.springframework.http.HttpStatus;
@@ -38,4 +39,15 @@ public class PacienteController {
     public void deletePaciente(@PathVariable long id) {
         pacienteRepository.deleteById(id);
     }
+
+    // Nuevo método para actualizar solo la contraseña
+    @PatchMapping(value = "/{id}/contraseña", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Paciente updateContraseña(@PathVariable long id, @RequestBody String nuevaContraseña) {
+        Paciente paciente = pacienteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Paciente con id %s no encontrado", id)));
+
+        paciente.setContraseña(nuevaContraseña);
+        return pacienteRepository.save(paciente);
+    }
 }
+

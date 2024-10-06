@@ -29,12 +29,12 @@ public class YsyAgendaBackendApplication {
             //Acá genero registros para poder testear las APIs
 
             // Guardar 5 pacientes
-            pacienteRepository.save(new Paciente("Martina", "Palleiro", "12345678", "martu@gmail.com"));
-            pacienteRepository.save(new Paciente("Rocio", "Villanueva", "23456789", "rovillanueva@yahoo.com"));
-            pacienteRepository.save(new Paciente("Gonzalo", "Seitz", "23456789", "gonza@idra.com"));
-            pacienteRepository.save(new Paciente("Joaquin", "Tren", "12345678", "joaco@hotmail.com"));
-            pacienteRepository.save(new Paciente("Valentina", "Leoz", "12345678", "valenleoz@hotmail.com"));
-            pacienteRepository.save(new Paciente("Mariano", "Van Staden", "23456789", "marianovans@gmail.com"));
+            pacienteRepository.save(new Paciente("Martina", "Palleiro", "12345678", "martu@gmail.com", "Marti2024"));
+            pacienteRepository.save(new Paciente("Rocio", "Villanueva", "23456789", "rovillanueva@yahoo.com", "Ro2024"));
+            pacienteRepository.save(new Paciente("Gonzalo", "Seitz", "23456789", "gonza@idra.com", "Gonza2024"));
+            pacienteRepository.save(new Paciente("Joaquin", "Tren", "12345678", "joaco@hotmail.com", "Joaco2024"));
+            pacienteRepository.save(new Paciente("Valentina", "Leoz", "12345678", "valenleoz@hotmail.com", "Valen2024"));
+            pacienteRepository.save(new Paciente("Mariano", "Van Staden", "23456789", "marianovans@gmail.com", "Mariano2024"));
 
 
             // Guardar 5 doctores

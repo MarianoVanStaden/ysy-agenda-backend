@@ -33,10 +33,19 @@ public class Paciente {
     @NotEmpty
     private String email;
 
-    public Paciente(String nombre, String apellido, String dni, String email) {
+    @NotEmpty
+    private String contraseña;
+
+    public Paciente(String nombre, String apellido, String dni, String email, String contraseña) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
         this.email = email;
+        this.contraseña = contraseña;
+    }
+
+    // Método para actualizar solo la contraseña
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
     }
 }
