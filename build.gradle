@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'war' // Añadir el plugin para WAR
     id 'io.spring.dependency-management' version "1.0.9.RELEASE"
     id 'org.springframework.boot' version '2.2.5.RELEASE'
     id 'pl.allegro.tech.build.axion-release' version '1.10.1'
@@ -8,55 +9,65 @@ plugins {
     id 'jp.classmethod.aws.cloudformation' version '0.41'
 }
 
-version = scmVersion.version
+    version = scmVersion.version
 
-repositories {
-    mavenCentral()
-    jcenter()
-}
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-devtools'
-    implementation group: 'com.h2database', name: 'h2', version: '1.3.148'
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-devtools'
+        implementation group: 'com.h2database', name: 'h2', version: '1.3.148'
 
-    compileOnly 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+        compileOnly 'org.projectlombok:lombok:1.18.12'
+        annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
 
-test {
-    useJUnitPlatform()
-}
+// Deshabilitar la tarea bootJar para evitar conflictos
+    tasks.named('bootJar') {
+        enabled = false
+    }
 
-String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'tkgregory'
-String imageName = "jordanthecoder/spring-boot-api-example:$version"
+// Asegurarse de que el WAR esté habilitado
+    tasks.named('war') {
+        enabled = true
+    }
 
-docker {
-    name imageName
-    files "build/libs/${bootJar.archiveFileName.get()}"
-    buildArgs([JAR_FILE: bootJar.archiveFileName.get()])
-}
+    test {
+        useJUnitPlatform()
+    }
 
-dockerRun {
-    name project.name
-    image imageName
-    ports '8080:8080'
-    clean true
-}
+    String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'tkgregory'
+    String imageName = "jordanthecoder/spring-boot-api-example:$version"
 
-import com.amazonaws.services.cloudformation.model.Capability
+    docker {
+        name imageName
+        files "build/libs/${bootJar.archiveFileName.get()}"
+        buildArgs([JAR_FILE: bootJar.archiveFileName.get()])
+    }
 
-cloudFormation {
-    stackName "$project.name-stack"
-    stackParams([
-            SubnetID: findProperty('subnetId') ?: '',
-            ServiceName: project.name,
-            ServiceVersion: project.version,
-            DockerHubUsername: dockerHubUsernameProperty
-    ])
-    templateFile project.file("ecs.yml")
-}
+    dockerRun {
+        name project.name
+        image imageName
+        ports '8080:8080'
+        clean true
+    }
+
+    import com.amazonaws.services.cloudformation.model.Capability
+
+    cloudFormation {
+        stackName "$project.name-stack"
+        stackParams([
+                SubnetID: findProperty('subnetId') ?: '',
+                ServiceName: project.name,
+                ServiceVersion: project.version,
+                DockerHubUsername: dockerHubUsernameProperty
+        ])
+        templateFile project.file("ecs.yml")
+    }
