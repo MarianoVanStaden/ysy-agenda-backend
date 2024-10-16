@@ -1,0 +1,190 @@
+# Documentación de la API – YSY-AGENDA
+
+## Base URL:
+https://sistemasmdq.com:8443/spring-boot-api-ysy-agenda-backend
+
+---
+
+## 1. Doctores
+
+### Obtener todos los doctores
+- **URL**: /doctores
+- **Método**: GET
+- **Descripción**: Devuelve una lista de todos los doctores.
+- **Respuesta**:
+  - **Código**: 200 OK
+  - **Contenido**: Lista de objetos Doctor en formato JSON.
+
+### Obtener un doctor por ID
+- **URL**: /doctores/{id}
+- **Método**: GET
+- **Descripción**: Devuelve un doctor específico por su ID.
+- **Parámetro**:
+  - `id` (long): El ID del doctor.
+- **Respuesta**:
+  - **Código**: 200 OK
+  - **Contenido**: Objeto Doctor en formato JSON.
+  - **Error**: 404 NOT FOUND si no se encuentra el doctor.
+
+### Crear un nuevo doctor
+- **URL**: /doctores
+- **Método**: POST
+- **Descripción**: Crea un nuevo doctor.
+- **Cuerpo de la solicitud**: Objeto Doctor en formato JSON.
+- **Respuesta**:
+  - **Código**: 201 CREATED
+  - **Contenido**: Objeto Doctor creado en formato JSON.
+
+### Eliminar un doctor
+- **URL**: /doctores/{id}
+- **Método**: DELETE
+- **Descripción**: Elimina un doctor por su ID.
+- **Parámetro**:
+  - `id` (long): El ID del doctor.
+- **Respuesta**:
+  - **Código**: 204 NO CONTENT
+  - **Error**: 404 NOT FOUND si no se encuentra el doctor.
+
+---
+
+## 2. Especialidades
+
+### Obtener todas las especialidades
+- **URL**: /especialidades
+- **Método**: GET
+- **Descripción**: Devuelve una lista de todas las especialidades médicas.
+- **Respuesta**:
+  - **Código**: 200 OK
+  - **Contenido**: Lista de objetos Especialidad en formato JSON.
+
+### Obtener una especialidad por ID
+- **URL**: /especialidades/{id}
+- **Método**: GET
+- **Descripción**: Devuelve una especialidad específica por su ID.
+- **Parámetro**:
+  - `id` (long): El ID de la especialidad.
+- **Respuesta**:
+  - **Código**: 200 OK
+  - **Contenido**: Objeto Especialidad en formato JSON.
+  - **Error**: 404 NOT FOUND si no se encuentra la especialidad.
+
+### Crear una nueva especialidad
+- **URL**: /especialidades
+- **Método**: POST
+- **Descripción**: Crea una nueva especialidad médica.
+- **Cuerpo de la solicitud**: Objeto Especialidad en formato JSON.
+- **Respuesta**:
+  - **Código**: 201 CREATED
+  - **Contenido**: Objeto Especialidad creado en formato JSON.
+
+### Eliminar una especialidad
+- **URL**: /especialidades/{id}
+- **Método**: DELETE
+- **Descripción**: Elimina una especialidad por su ID.
+- **Parámetro**:
+  - `id` (long): El ID de la especialidad.
+- **Respuesta**:
+  - **Código**: 204 NO CONTENT
+  - **Error**: 404 NOT FOUND si no se encuentra la especialidad.
+
+---
+
+## 3. Pacientes
+
+### Obtener todos los pacientes
+- **URL**: /pacientes
+- **Método**: GET
+- **Descripción**: Devuelve una lista de todos los pacientes.
+- **Respuesta**:
+  - **Código**: 200 OK
+  - **Contenido**: Lista de objetos Paciente en formato JSON.
+
+### Obtener un paciente por ID
+- **URL**: /pacientes/{id}
+- **Método**: GET
+- **Descripción**: Devuelve un paciente específico por su ID.
+- **Parámetro**:
+  - `id` (long): El ID del paciente.
+- **Respuesta**:
+  - **Código**: 200 OK
+  - **Contenido**: Objeto Paciente en formato JSON.
+  - **Error**: 404 NOT FOUND si no se encuentra el paciente.
+
+### Crear un nuevo paciente
+- **URL**: /pacientes
+- **Método**: POST
+- **Descripción**: Crea un nuevo paciente.
+- **Cuerpo de la solicitud**: Objeto Paciente en formato JSON.
+- **Respuesta**:
+  - **Código**: 201 CREATED
+  - **Contenido**: Objeto Paciente creado en formato JSON.
+
+### Eliminar un paciente
+- **URL**: /pacientes/{id}
+- **Método**: DELETE
+- **Descripción**: Elimina un paciente por su ID.
+- **Parámetro**:
+  - `id` (long): El ID del paciente.
+- **Respuesta**:
+  - **Código**: 204 NO CONTENT
+  - **Error**: 404 NOT FOUND si no se encuentra el paciente.
+
+### Actualizar la contraseña de un paciente
+- **URL**: /pacientes/{id}/contraseña
+- **Método**: PATCH
+- **Descripción**: Actualiza la contraseña de un paciente específico.
+- **Parámetro**:
+  - `id` (long): El ID del paciente.
+- **Cuerpo de la solicitud**: Nueva contraseña en formato String.
+- **Respuesta**:
+  - **Código**: 200 OK
+  - **Contenido**: Objeto Paciente actualizado.
+  - **Error**: 404 NOT FOUND si no se encuentra el paciente.
+
+---
+
+## 4. Turnos
+
+### Obtener todos los turnos
+- **URL**: /turnos
+- **Método**: GET
+- **Descripción**: Devuelve una lista de todos los turnos disponibles.
+- **Respuesta**:
+  - **Código**: 200 OK
+  - **Contenido**: Lista de objetos Turno en formato JSON.
+
+### Obtener un turno por ID
+- **URL**: /turnos/{id}
+- **Método**: GET
+- **Descripción**: Devuelve un turno específico por su ID.
+- **Parámetro**:
+  - `id` (long): El ID del turno.
+- **Respuesta**:
+  - **Código**: 200 OK
+  - **Contenido**: Objeto Turno en formato JSON.
+  - **Error**: 404 NOT FOUND si no se encuentra el turno.
+
+### Crear un nuevo turno
+- **URL**: /turnos
+- **Método**: POST
+- **Descripción**: Crea un nuevo turno.
+- **Cuerpo de la solicitud**: Objeto Turno en formato JSON.
+- **Respuesta**:
+  - **Código**: 201 CREATED
+  - **Contenido**: Objeto Turno creado en formato JSON.
+
+### Eliminar un turno
+- **URL**: /turnos/{id}
+- **Método**: DELETE
+- **Descripción**: Elimina un turno por su ID.
+- **Parámetro**:
+  - `id` (long): El ID del turno.
+- **Respuesta**:
+  - **Código**: 204 NO CONTENT
+  - **Error**: 404 NOT FOUND si no se encuentra el turno.
+
+---
+
+## Notas adicionales:
+- Todas las rutas responden en formato application/json.
+- En las rutas POST y PATCH, los datos deben ser enviados en formato JSON.

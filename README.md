@@ -1,4 +1,4 @@
-## Overview
+![img.png](img.png)## Overview
 
 An example project to demonstrate:
 
@@ -14,10 +14,6 @@ An example project to demonstrate:
 
 `./gradlew assemble`
 
-### Building (with tests)
-
-`./gradlew build`
-
 ### Running in Docker (Docker installation expected)
 
 `./gradlew assemble docker dockerRun`
@@ -26,10 +22,3 @@ An example project to demonstrate:
 
 `./gradlew dockerStop`
 
-### Deploying to AWS
-
-`./gradlew awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=<your-subnet-id>`
-
-### Deleting AWS deployment
-
-`./gradlew awsCfnDeleteStack awsCfnWaitStackComplete`
