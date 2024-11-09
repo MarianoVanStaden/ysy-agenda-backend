@@ -1,4 +1,4 @@
-package com.ysyagenda.service;
+/*package com.ysyagenda.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,3 +22,4 @@ public class EmailService {
         mailSender.send(message); // Asegúrate de que mailSender esté inyectado
     }
 }
+*/

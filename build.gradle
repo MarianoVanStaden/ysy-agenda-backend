@@ -23,6 +23,26 @@ plugins {
         implementation 'org.springframework.boot:spring-boot-devtools'
         implementation group: 'com.h2database', name: 'h2', version: '1.3.148'
         implementation 'org.springframework.boot:spring-boot-starter-mail'
+        implementation 'com.mailgun:mailgun-java:1.1.3'
+        implementation 'com.mashape.unirest:unirest-java:1.4.9'
+        // Dependencia para enviar correos con Mailgun (usando la API de Mailgun)
+        implementation 'com.mashape.unirest:unirest-java:1.4.9'
+
+        // Dependencia para Spring Boot Mail (si decides usar SMTP)
+        implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+        // Dependencia para Spring Boot Web (para el controlador y servicios)
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+
+        // Dependencia para Spring Boot Data JPA (si trabajas con bases de datos)
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+        // Dependencia para validación de datos
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+        // Otras dependencias
+        implementation 'org.springframework.boot:spring-boot-starter'
+        implementation 'org.mindrot:jbcrypt:0.4'
 
 
 
