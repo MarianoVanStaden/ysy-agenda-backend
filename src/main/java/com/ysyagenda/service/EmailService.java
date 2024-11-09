@@ -14,7 +14,7 @@ public class EmailService {
 
     public void sendEmail(String toEmail, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("tu_correo@gmail.com"); // Cambia esto por el email que uses para enviar
+        message.setFrom("ysyagenda@gmail.com"); // Cambia esto por el email que uses para enviar
         message.setTo(toEmail);
         message.setSubject(subject);
         message.setText(body);
