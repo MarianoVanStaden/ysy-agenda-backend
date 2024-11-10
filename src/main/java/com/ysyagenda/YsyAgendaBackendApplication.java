@@ -35,16 +35,17 @@ public class YsyAgendaBackendApplication extends SpringBootServletInitializer { 
             pacienteRepository.save(new Paciente("Rocio", "Villanueva", "23456789", "rovillanueva@yahoo.com", "Ro2024"));
             pacienteRepository.save(new Paciente("Gonzalo", "Seitz", "23456789", "gonza@idra.com", "Gonza2024"));
             pacienteRepository.save(new Paciente("Joaquin", "Tren", "12345678", "joaco@hotmail.com", "Joaco2024"));
-            pacienteRepository.save(new Paciente("Valentina", "Leoz", "12345678", "valenleoz@hotmail.com", "Valen2024"));
-            pacienteRepository.save(new Paciente("Mariano", "Van Staden", "23456789", "ysyagenda@gmail.com", "12345678"));
+            pacienteRepository.save(new Paciente("Valentina", "Leoz", "12345678", "ysyagenda@hotmail.com", "Valen2024"));
+            pacienteRepository.save(new Paciente("Mariano", "Van Staden", "23456789", "marianovanstaden@gmail.com", "12345678"));
 
 
             // Guardar 5 doctores
-            doctorRepository.save(new Doctor("Carlos", "Sánchez", "Neurología"));
-            doctorRepository.save(new Doctor("Lucía", "Fernández", "Cardiología"));
-            doctorRepository.save(new Doctor("Ana", "Rodríguez", "Pediatría"));
-            doctorRepository.save(new Doctor("Fernando", "Mora", "Dermatología"));
-            doctorRepository.save(new Doctor("Laura", "Suárez", "Oftalmología"));
+            doctorRepository.save(new Doctor("Carlos", "Sánchez", "Pediatría"));
+            doctorRepository.save(new Doctor("Pedro", "Pascal", "Pediatría"));
+            doctorRepository.save(new Doctor("Lucía", "Fernández", "Dermatología"));
+            doctorRepository.save(new Doctor("Ana", "Rodríguez", "Traumatología"));
+            doctorRepository.save(new Doctor("Fernando", "Mora", "Ginecología"));
+            doctorRepository.save(new Doctor("Laura", "Suárez", "Psiquiatría"));
 
 
             // Guardar 5 especialidades
@@ -56,10 +57,10 @@ public class YsyAgendaBackendApplication extends SpringBootServletInitializer { 
 
 
             // Guardar 20 turnos (ejemplo usando fechas)
-            turnoRepository.save(new Turno(pacienteRepository.findByNombre("Mariano").get(0), doctorRepository.findByEspecialidad("Neurología").get(0), LocalDateTime.of(2024, 10, 5, 10, 0)));
-            turnoRepository.save(new Turno(pacienteRepository.findByNombre("Valentina").get(0), doctorRepository.findByEspecialidad("Cardiología").get(0), LocalDateTime.of(2024, 10, 6, 11, 0)));
-            turnoRepository.save(new Turno(pacienteRepository.findByNombre("Rocio").get(0), doctorRepository.findByEspecialidad("Pediatría").get(0), LocalDateTime.of(2024, 10, 7, 12, 0)));
-            turnoRepository.save(new Turno(pacienteRepository.findByNombre("Gonzalo").get(0), doctorRepository.findByEspecialidad("Dermatología").get(0), LocalDateTime.of(2024, 10, 8, 9, 0)));
+            //turnoRepository.save(new Turno(pacienteRepository.findByNombre("Mariano").get(0), doctorRepository.findByEspecialidad("Neurología").get(0), LocalDateTime.of(2024, 10, 5, 10, 0)));
+           // turnoRepository.save(new Turno(pacienteRepository.findByNombre("Valentina").get(0), doctorRepository.findByEspecialidad("Cardiología").get(0), LocalDateTime.of(2024, 10, 6, 11, 0)));
+          //  turnoRepository.save(new Turno(pacienteRepository.findByNombre("Rocio").get(0), doctorRepository.findByEspecialidad("Pediatría").get(0), LocalDateTime.of(2024, 10, 7, 12, 0)));
+         //   turnoRepository.save(new Turno(pacienteRepository.findByNombre("Gonzalo").get(0), doctorRepository.findByEspecialidad("Dermatología").get(0), LocalDateTime.of(2024, 10, 8, 9, 0)));
 
 
         };

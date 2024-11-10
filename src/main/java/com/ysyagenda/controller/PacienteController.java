@@ -1,6 +1,6 @@
 package com.ysyagenda.controller;
 
-import com.ysyagenda.service.MailgunService;
+import com.ysyagenda.service.EmailService;
 import com.ysyagenda.entity.PasswordResetToken;
 import com.ysyagenda.repository.PasswordResetTokenRepository;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -24,20 +24,21 @@ public class PacienteController {
 
     private final PacienteRepository pacienteRepository;
     private final PasswordResetTokenRepository tokenRepository;
-
-    @Autowired
-    private MailgunService emailService;
+    private final EmailService emailService;  // Cambié a EmailService
 
     @Value("${app.frontend-url}")
     private String frontendUrl;
 
-    public PacienteController(PacienteRepository pacienteRepository,
-                              PasswordResetTokenRepository tokenRepository) {
+    @Autowired
+    public PacienteController(
+            PacienteRepository pacienteRepository,
+            PasswordResetTokenRepository tokenRepository,
+            EmailService emailService) {  // Cambié a EmailService
         this.pacienteRepository = pacienteRepository;
         this.tokenRepository = tokenRepository;
+        this.emailService = emailService;
     }
 
-    // Existing methods remain unchanged
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Iterable<Paciente> getPacientes() {
         return pacienteRepository.findAll();
@@ -46,7 +47,9 @@ public class PacienteController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Paciente getPaciente(@PathVariable long id) {
         return pacienteRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Paciente con id %s no encontrado", id)));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("Paciente con id %s no encontrado", id)));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -59,48 +62,49 @@ public class PacienteController {
         pacienteRepository.deleteById(id);
     }
 
-    // Updated password recovery method
     @PostMapping("/recuperar-contraseña")
-    public ResponseEntity<?> recuperarContraseña(@RequestParam String email) {
+    public ResponseEntity<Map<String, String>> recuperarContraseña(@RequestParam String email) {
         try {
             Paciente paciente = pacienteRepository.findByEmail(email)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND,
                             String.format("Paciente con email %s no encontrado", email)));
 
-            // Generate token and save it
             String token = UUID.randomUUID().toString();
             PasswordResetToken resetToken = new PasswordResetToken(token, paciente);
             tokenRepository.save(resetToken);
 
-            // Create reset link
-            String resetUrl = frontendUrl + "/reset-password?token=" + token;
+            String resetUrl = String.format("%s/reset-password?token=%s", frontendUrl, token);
 
-            // Send email with reset link
-            String subject = "Recuperación de contraseña";
-            String body = String.format(
-                    "Estimado/a %s,\n\n" +
-                            "Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace:\n\n%s\n\n" +
-                            "Este enlace expirará en 24 horas.\n\n" +
-                            "Si no solicitaste este cambio, ignora este correo.",
-                    paciente.getNombre(), resetUrl);
+            // Usamos el servicio de correo para enviar el correo de recuperación
+            emailService.sendPasswordResetEmail(
+                    paciente.getEmail(),
+                    "Recuperación de contraseña",
+                    buildResetEmailBody(paciente.getNombre(), resetUrl)
+            );
 
-            emailService.sendSimpleMessage(paciente.getEmail(), subject, body);
-
-            return ResponseEntity.ok()
-                    .body(Map.of("message", "Se ha enviado un enlace de recuperación a tu correo"));
+            return ResponseEntity.ok(Map.of("message",
+                    "Se ha enviado un enlace de recuperación a tu correo"));
 
         } catch (IncorrectResultSizeDataAccessException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Multiple accounts found for the provided email", e);
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Multiple accounts found for the provided email",
+                    e);
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al procesar la solicitud", e);
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error al procesar la solicitud",
+                    e);
         }
     }
 
-    // Updated password update method
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestParam String token, @RequestParam String nuevaContraseña) {
+    public ResponseEntity<Map<String, String>> resetPassword(
+            @RequestParam String token,
+            @RequestParam String nuevaContraseña) {
         try {
             PasswordResetToken resetToken = tokenRepository.findByToken(token);
 
@@ -109,20 +113,32 @@ public class PacienteController {
                         .body(Map.of("message", "Token inválido o expirado"));
             }
 
-            Paciente paciente = resetToken.getPaciente();
-            paciente.setContraseña(BCrypt.hashpw(nuevaContraseña, BCrypt.gensalt()));
-            pacienteRepository.save(paciente);
-
-            // Delete the used token
-            tokenRepository.delete(resetToken);
+            updatePasswordAndDeleteToken(resetToken, nuevaContraseña);
 
             return ResponseEntity.ok()
                     .body(Map.of("message", "Contraseña actualizada correctamente"));
 
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al actualizar la contraseña", e);
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error al actualizar la contraseña",
+                    e);
         }
     }
 
-    // Removing the old updateContraseña method as it's being replaced by the more secure reset-password endpoint
+    private String buildResetEmailBody(String nombre, String resetUrl) {
+        return String.format(
+                "Estimado/a %s,\n\n" +
+                        "Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace:\n\n%s\n\n" +
+                        "Este enlace expirará en 24 horas.\n\n" +
+                        "Si no solicitaste este cambio, ignora este correo.",
+                nombre, resetUrl);
+    }
+
+    private void updatePasswordAndDeleteToken(PasswordResetToken resetToken, String nuevaContraseña) {
+        Paciente paciente = resetToken.getPaciente();
+        paciente.setContraseña(BCrypt.hashpw(nuevaContraseña, BCrypt.gensalt()));
+        pacienteRepository.save(paciente);
+        tokenRepository.delete(resetToken);
+    }
 }

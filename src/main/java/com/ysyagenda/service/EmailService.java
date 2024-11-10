@@ -1,5 +1,4 @@
-/*package com.ysyagenda.service;
-
+package com.ysyagenda.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -9,17 +8,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender mailSender; // Inyectar el JavaMailSender
+    private final JavaMailSender javaMailSender;
 
-    public void sendEmail(String toEmail, String subject, String body) {
+    @Autowired
+    public EmailService(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
+
+    public void sendPasswordResetEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("ysyagenda@gmail.com"); // Cambia esto por el email que uses para enviar
-        message.setTo(toEmail);
+        message.setFrom("ysyagenda@gmail.com"); // El correo desde el cual se envía el mensaje
+        message.setTo(to);
         message.setSubject(subject);
         message.setText(body);
-
-        mailSender.send(message); // Asegúrate de que mailSender esté inyectado
+        javaMailSender.send(message);
     }
 }
-*/
+

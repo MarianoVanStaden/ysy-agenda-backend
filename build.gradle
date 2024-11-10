@@ -43,6 +43,7 @@ plugins {
         // Otras dependencias
         implementation 'org.springframework.boot:spring-boot-starter'
         implementation 'org.mindrot:jbcrypt:0.4'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
 
 
 
