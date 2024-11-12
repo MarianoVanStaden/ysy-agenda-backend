@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -63,9 +65,9 @@ public class PacienteController {
                     "Recuperación de contraseña",
                     buildPasswordEmailBody(paciente.getNombre(), paciente.getContraseña())
             );
-
-            return ResponseEntity.ok(Map.of("message",
-                    "Se ha enviado la contraseña a tu correo"));
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Se ha enviado la contraseña a tu correo");
+            return ResponseEntity.ok(response);
 
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new ResponseStatusException(
