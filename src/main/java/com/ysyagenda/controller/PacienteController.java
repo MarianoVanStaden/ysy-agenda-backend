@@ -40,6 +40,31 @@ public class PacienteController {
                         HttpStatus.NOT_FOUND,
                         String.format("Paciente con id %s no encontrado", id)));
     }
+    @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Paciente updatePaciente(@PathVariable long id, @RequestBody Map<String, Object> updates) {
+        Paciente paciente = pacienteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
+
+        // Verificamos y actualizamos los campos enviados en el cuerpo de la solicitud
+        updates.forEach((key, value) -> {
+            switch (key) {
+                case "nombre":
+                    paciente.setNombre((String) value);
+                    break;
+                case "apellido":
+                    paciente.setApellido((String) value);
+                    break;
+                case "email":
+                    paciente.setEmail((String) value);
+                    break;
+                case "dni":
+                    paciente.setDni((String) value);
+                    break;
+            }
+        });
+
+        return pacienteRepository.save(paciente); // Guardamos los cambios en la base de datos
+    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Paciente createPaciente(@Valid @RequestBody Paciente paciente) {
