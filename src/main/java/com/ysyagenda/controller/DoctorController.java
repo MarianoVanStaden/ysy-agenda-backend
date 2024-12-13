@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/doctores")
 public class DoctorController {

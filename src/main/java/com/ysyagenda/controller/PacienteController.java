@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.Map;
-
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/pacientes")
 public class PacienteController {
