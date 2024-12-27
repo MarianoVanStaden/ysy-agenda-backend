@@ -1,10 +1,7 @@
 package com.ysyagenda;
 
 
-import com.ysyagenda.entity.Doctor;
-import com.ysyagenda.entity.Especialidad;
-import com.ysyagenda.entity.Paciente;
-import com.ysyagenda.entity.Turno;
+import com.ysyagenda.entity.*;
 import com.ysyagenda.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +20,7 @@ public class YsyAgendaBackendApplication extends SpringBootServletInitializer { 
 
     @Bean
     public CommandLineRunner sampleData(
+            UsuarioRepository usuarioRepository,
             PacienteRepository pacienteRepository,
             DoctorRepository doctorRepository,
             TurnoRepository turnoRepository,
@@ -31,12 +29,28 @@ public class YsyAgendaBackendApplication extends SpringBootServletInitializer { 
             //Acá genero registros para poder testear las APIs
 
             // Guardar 5 pacientes
-            pacienteRepository.save(new Paciente("Martina", "Palleiro", "12345678", "martu@gmail.com", "Marti2024"));
-            pacienteRepository.save(new Paciente("Rocio", "Villanueva", "23456789", "rovillanueva@yahoo.com", "Ro2024"));
-            pacienteRepository.save(new Paciente("Gonzalo", "Seitz", "23456789", "gonza@idra.com", "Gonza2024"));
-            pacienteRepository.save(new Paciente("Joaquin", "Tren", "12345678", "joaco@hotmail.com", "Joaco2024"));
-            pacienteRepository.save(new Paciente("Valentina", "Leoz", "12345678", "ysyagenda@hotmail.com", "Valen2024"));
-            pacienteRepository.save(new Paciente("Mariano", "Van Staden", "23456789", "marianovanstaden@gmail.com", "12345678"));
+            usuarioRepository.save(new Usuario("Marian", "Van Staden", "000", "admin1@example.com", "000", Usuario.TipoUsuario.ADMIN));
+            usuarioRepository.save(new Usuario("Admin2", "Garcia", "22222222", "admin2@example.com", "AdminPass2", Usuario.TipoUsuario.ADMIN));
+            usuarioRepository.save(new Usuario("Admin3", "Lopez", "33333333", "admin3@example.com", "AdminPass3", Usuario.TipoUsuario.ADMIN));
+
+            // Crear 3 usuarios PACIENTE
+            usuarioRepository.save(new Usuario("Valen", "Leoz", "111", "paciente1@example.com", "111", Usuario.TipoUsuario.PACIENTE));
+            usuarioRepository.save(new Usuario("Paciente2", "Fernandez", "55555555", "paciente2@example.com", "PacientePass2", Usuario.TipoUsuario.PACIENTE));
+            usuarioRepository.save(new Usuario("Paciente3", "Rodriguez", "66666666", "paciente3@example.com", "PacientePass3", Usuario.TipoUsuario.PACIENTE));
+
+            // Crear 3 usuarios PROFESIONAL
+            Usuario profesional1 = new Usuario("Martu", "Palleiro", "999", "profesional1@example.com", "999", Usuario.TipoUsuario.PROFESIONAL);
+            profesional1.setEspecialidad("Cardiología");
+
+            Usuario profesional2 = new Usuario("Profesional2", "Gomez", "88888888", "profesional2@example.com", "ProfesionalPass2", Usuario.TipoUsuario.PROFESIONAL);
+            profesional2.setEspecialidad("Neurología");
+
+            Usuario profesional3 = new Usuario("Profesional3", "Alvarez", "99999999", "profesional3@example.com", "ProfesionalPass3", Usuario.TipoUsuario.PROFESIONAL);
+            profesional3.setEspecialidad("Pediatría");
+
+            usuarioRepository.save(profesional1);
+            usuarioRepository.save(profesional2);
+            usuarioRepository.save(profesional3);
 
 
             // Guardar 5 doctores
