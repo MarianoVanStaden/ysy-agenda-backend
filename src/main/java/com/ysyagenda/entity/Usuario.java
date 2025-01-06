@@ -2,12 +2,14 @@ package com.ysyagenda.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Usuario {
     @Id
@@ -49,52 +51,5 @@ public class Usuario {
         this.email = email;
         this.contraseña = contraseña;
         this.tipoUsuario = tipoUsuario;
-    }
-
-    // Getters y setters
-    public void setId(Long id) { this.id = id; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public void setApellido(String apellido) { this.apellido = apellido; }
-    public void setDni(String dni) { this.dni = dni; }
-    public void setEmail(String email) { this.email = email; }
-    public void setContraseña(String contraseña) { this.contraseña = contraseña; }
-    public void setTipoUsuario(TipoUsuario tipoUsuario) { this.tipoUsuario = tipoUsuario; }
-    public void setDepartamento(String departamento) { this.departamento = departamento; }
-    public void setEspecialidad(String especialidad) { this.especialidad = especialidad; }
-
-    public Long getId() {
-        return id;
-    }
-
-    public @NotEmpty String getNombre() {
-        return nombre;
-    }
-
-    public @NotEmpty String getApellido() {
-        return apellido;
-    }
-
-    public @NotEmpty String getDni() {
-        return dni;
-    }
-
-    public @Email @NotEmpty String getEmail() {
-        return email;
-    }
-
-    public @NotEmpty String getContraseña() {
-        return contraseña;
-    }
-
-    public TipoUsuario getTipoUsuario() {
-        return tipoUsuario;
-    }
-
-    public String getDepartamento() {
-        return departamento;
-    }
-
-    public String getEspecialidad() {
-        return especialidad;
     }
 }
