@@ -1,20 +1,13 @@
+// FranjaHoraria.java (entity)
 package com.ysyagenda.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.data.annotation.Id;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import lombok.Data;
+import javax.persistence.*;
 import java.time.LocalTime;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
+@Table(name = "franjas_horarias")
 public class FranjaHoraria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

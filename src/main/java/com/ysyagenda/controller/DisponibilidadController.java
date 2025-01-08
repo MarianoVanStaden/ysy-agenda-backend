@@ -1,22 +1,23 @@
+// DisponibilidadController.java
 package com.ysyagenda.controller;
 
-import com.ysyagenda.controller.DisponibilidadDTO;
 import com.ysyagenda.entity.Disponibilidad;
 import com.ysyagenda.entity.Usuario;
+import com.ysyagenda.entity.FranjaHoraria;
 import com.ysyagenda.repository.DisponibilidadRepository;
 import com.ysyagenda.repository.UsuarioRepository;
-import com.ysyagenda.entity.FranjaHoraria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/disponibilidad")
+@RequestMapping("/disponibilidad")
 @CrossOrigin(origins = "*")
 public class DisponibilidadController {
     private final DisponibilidadRepository disponibilidadRepository;
