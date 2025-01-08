@@ -13,20 +13,10 @@ import java.util.List;
 public interface DisponibilidadRepository extends JpaRepository<Disponibilidad, Long> {
     List<Disponibilidad> findByUsuarioId(Long usuarioId);
 
-    List<Disponibilidad> findByUsuarioIdAndFechaInicioBetweenAndFechaFinBetween(
+    List<Disponibilidad> findByUsuarioIdAndDiaSemanaAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
             Long usuarioId,
-            LocalDate fechaInicioRango,
-            LocalDate fechaFinRango,
-            LocalDate fechaInicioRango2,
-            LocalDate fechaFinRango2
-    );
-
-    @Query("SELECT d FROM Disponibilidad d WHERE d.usuario.id = :usuarioId " +
-            "AND d.fechaInicio <= :fecha AND d.fechaFin >= :fecha " +
-            "AND d.diaSemana = :diaSemana")
-    List<Disponibilidad> findDisponibilidadPorDia(
-            @Param("usuarioId") Long usuarioId,
-            @Param("fecha") LocalDate fecha,
-            @Param("diaSemana") Integer diaSemana
+            Integer diaSemana,
+            LocalDate fechaFin,
+            LocalDate fechaInicio
     );
 }

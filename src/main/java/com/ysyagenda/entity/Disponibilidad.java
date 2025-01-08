@@ -8,13 +8,13 @@ import org.springframework.data.annotation.Id;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 public class Disponibilidad {
-    @javax.persistence.Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,14 +26,15 @@ public class Disponibilidad {
     @Column(nullable = false)
     private Integer diaSemana; // 1 = Lunes, 7 = Domingo
 
-    @Column(nullable = false)
-    private LocalTime horaInicio;
-
-    @Column(nullable = false)
-    private LocalTime horaFin;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "disponibilidad_id")
+    private List<FranjaHoraria> franjasHorarias;
 
     @Column(nullable = false)
     private boolean disponible;
+
+    @Column(nullable = false)
+    private boolean horarioCortado;
 
     @Column(nullable = false)
     private LocalDate fechaInicio;
@@ -41,4 +42,3 @@ public class Disponibilidad {
     @Column(nullable = false)
     private LocalDate fechaFin;
 }
-
