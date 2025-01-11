@@ -1,5 +1,6 @@
 package com.ysyagenda.controller;
 
+import com.ysyagenda.entity.Disponibilidad;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class DisponibilidadDTO {
     private Long usuarioId;
-    private Integer diaSemana;
+    private Disponibilidad.DiaSemana diaSemana;
     private boolean disponible;
     private boolean horarioCortado;
     private LocalDate fechaInicio;

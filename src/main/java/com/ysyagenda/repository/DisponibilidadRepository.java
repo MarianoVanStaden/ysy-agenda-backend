@@ -13,7 +13,7 @@ public interface DisponibilidadRepository extends JpaRepository<Disponibilidad, 
 
     List<Disponibilidad> findByUsuarioIdAndDiaSemanaAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
             Long usuarioId,
-            Integer diaSemana,
+            Disponibilidad.DiaSemana diaSemana,
             LocalDate fechaFin,
             LocalDate fechaInicio
     );

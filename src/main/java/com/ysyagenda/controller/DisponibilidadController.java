@@ -1,4 +1,3 @@
-// DisponibilidadController.java
 package com.ysyagenda.controller;
 
 import com.ysyagenda.entity.Disponibilidad;
@@ -11,15 +10,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/disponibilidad")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:8081")
 public class DisponibilidadController {
+
     private final DisponibilidadRepository disponibilidadRepository;
     private final UsuarioRepository usuarioRepository;
 
@@ -40,7 +40,11 @@ public class DisponibilidadController {
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
-        // Validar que no exista disponibilidad para el mismo día en el rango de fechas
+        if (usuario.getTipoUsuario() != Usuario.TipoUsuario.PROFESIONAL) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Solo los usuarios de tipo PROFESIONAL pueden tener disponibilidades.");
+        }
+
         List<Disponibilidad> disponibilidadesExistentes = disponibilidadRepository
                 .findByUsuarioIdAndDiaSemanaAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
                         dto.getUsuarioId(),
@@ -51,24 +55,10 @@ public class DisponibilidadController {
 
         if (!disponibilidadesExistentes.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Ya existe disponibilidad para este día en el rango de fechas especificado");
+                    "Ya existe disponibilidad para este día en el rango de fechas especificado.");
         }
 
-        // Validar franjas horarias
-        if (dto.getFranjasHorarias() == null || dto.getFranjasHorarias().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Debe especificar al menos una franja horaria");
-        }
-
-        if (dto.isHorarioCortado() && dto.getFranjasHorarias().size() != 2) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "El horario cortado debe tener exactamente dos franjas horarias");
-        }
-
-        if (!dto.isHorarioCortado() && dto.getFranjasHorarias().size() > 1) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "El horario continuo debe tener una sola franja horaria");
-        }
+        validateFranjasHorarias(dto);
 
         Disponibilidad disponibilidad = new Disponibilidad();
         disponibilidad.setUsuario(usuario);
@@ -78,22 +68,8 @@ public class DisponibilidadController {
         disponibilidad.setFechaInicio(dto.getFechaInicio());
         disponibilidad.setFechaFin(dto.getFechaFin());
 
-        List<FranjaHoraria> franjas = dto.getFranjasHorarias().stream()
-                .map(franjaDTO -> {
-                    // Validar que hora fin sea posterior a hora inicio
-                    if (franjaDTO.getHoraFin().isBefore(franjaDTO.getHoraInicio())) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                "La hora de fin debe ser posterior a la hora de inicio");
-                    }
-
-                    FranjaHoraria franja = new FranjaHoraria();
-                    franja.setHoraInicio(franjaDTO.getHoraInicio());
-                    franja.setHoraFin(franjaDTO.getHoraFin());
-                    return franja;
-                })
-                .collect(Collectors.toList());
-
-        disponibilidad.setFranjasHorarias(franjas);
+        List<FranjaHoraria> franjas = mapFranjas(dto);
+        franjas.forEach(disponibilidad::addFranjaHoraria);
 
         return ResponseEntity.ok(disponibilidadRepository.save(disponibilidad));
     }
@@ -106,46 +82,16 @@ public class DisponibilidadController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Disponibilidad no encontrada"));
 
-        // Validar franjas horarias
-        if (dto.getFranjasHorarias() == null || dto.getFranjasHorarias().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Debe especificar al menos una franja horaria");
-        }
-
-        if (dto.isHorarioCortado() && dto.getFranjasHorarias().size() != 2) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "El horario cortado debe tener exactamente dos franjas horarias");
-        }
-
-        if (!dto.isHorarioCortado() && dto.getFranjasHorarias().size() > 1) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "El horario continuo debe tener una sola franja horaria");
-        }
+        validateFranjasHorarias(dto);
 
         disponibilidad.setDisponible(dto.isDisponible());
         disponibilidad.setHorarioCortado(dto.isHorarioCortado());
         disponibilidad.setFechaInicio(dto.getFechaInicio());
         disponibilidad.setFechaFin(dto.getFechaFin());
 
-        // Limpiar franjas horarias existentes
         disponibilidad.getFranjasHorarias().clear();
-
-        // Agregar nuevas franjas horarias
-        List<FranjaHoraria> franjas = dto.getFranjasHorarias().stream()
-                .map(franjaDTO -> {
-                    if (franjaDTO.getHoraFin().isBefore(franjaDTO.getHoraInicio())) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                "La hora de fin debe ser posterior a la hora de inicio");
-                    }
-
-                    FranjaHoraria franja = new FranjaHoraria();
-                    franja.setHoraInicio(franjaDTO.getHoraInicio());
-                    franja.setHoraFin(franjaDTO.getHoraFin());
-                    return franja;
-                })
-                .collect(Collectors.toList());
-
-        disponibilidad.getFranjasHorarias().addAll(franjas);
+        List<FranjaHoraria> franjas = mapFranjas(dto);
+        franjas.forEach(disponibilidad::addFranjaHoraria);
 
         return ResponseEntity.ok(disponibilidadRepository.save(disponibilidad));
     }
@@ -157,5 +103,40 @@ public class DisponibilidadController {
         }
         disponibilidadRepository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private void validateFranjasHorarias(DisponibilidadDTO dto) {
+        if (dto.getFranjasHorarias() == null || dto.getFranjasHorarias().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Debe especificar al menos una franja horaria.");
+        }
+
+        if (dto.isHorarioCortado() && dto.getFranjasHorarias().size() != 2) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "El horario cortado debe tener exactamente dos franjas horarias.");
+        }
+
+        if (!dto.isHorarioCortado() && dto.getFranjasHorarias().size() > 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "El horario continuo debe tener una sola franja horaria.");
+        }
+
+        for (FranjaHorariaDTO franjaDTO : dto.getFranjasHorarias()) {
+            if (franjaDTO.getHoraFin().isBefore(franjaDTO.getHoraInicio())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "La hora de fin debe ser posterior a la hora de inicio.");
+            }
+        }
+    }
+
+    private List<FranjaHoraria> mapFranjas(DisponibilidadDTO dto) {
+        return dto.getFranjasHorarias().stream()
+                .map(franjaDTO -> {
+                    FranjaHoraria franja = new FranjaHoraria();
+                    franja.setHoraInicio(franjaDTO.getHoraInicio());
+                    franja.setHoraFin(franjaDTO.getHoraFin());
+                    return franja;
+                })
+                .collect(Collectors.toList());
     }
 }
