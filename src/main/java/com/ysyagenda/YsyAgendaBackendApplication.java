@@ -21,8 +21,6 @@ public class YsyAgendaBackendApplication extends SpringBootServletInitializer { 
     @Bean
     public CommandLineRunner sampleData(
             UsuarioRepository usuarioRepository,
-            PacienteRepository pacienteRepository,
-            DoctorRepository doctorRepository,
             TurnoRepository turnoRepository,
             EspecialidadRepository especialidadRepository) {
         return (args) -> {
@@ -51,15 +49,6 @@ public class YsyAgendaBackendApplication extends SpringBootServletInitializer { 
             usuarioRepository.save(profesional1);
             usuarioRepository.save(profesional2);
             usuarioRepository.save(profesional3);
-
-
-            // Guardar 5 doctores
-            doctorRepository.save(new Doctor("Carlos", "Sánchez", "Pediatría"));
-            doctorRepository.save(new Doctor("Pedro", "Pascal", "Pediatría"));
-            doctorRepository.save(new Doctor("Lucía", "Fernández", "Dermatología"));
-            doctorRepository.save(new Doctor("Ana", "Rodríguez", "Traumatología"));
-            doctorRepository.save(new Doctor("Fernando", "Mora", "Ginecología"));
-            doctorRepository.save(new Doctor("Laura", "Suárez", "Psiquiatría"));
 
 
             // Guardar 5 especialidades
