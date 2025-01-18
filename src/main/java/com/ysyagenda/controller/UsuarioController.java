@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
