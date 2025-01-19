@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/disponibilidad")
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:5173")
 public class DisponibilidadController {
 
     private final DisponibilidadRepository disponibilidadRepository;

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/turnos")
 public class TurnoController {
@@ -38,4 +38,9 @@ public class TurnoController {
     public void deleteTurno(@PathVariable long id) {
         turnoRepository.deleteById(id);
     }
+    @GetMapping(value = "/profesional/{profesionalId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Iterable<Turno> getTurnosByProfesional(@PathVariable long profesionalId) {
+        return turnoRepository.findByProfesionalId(profesionalId);
+    }
+
 }

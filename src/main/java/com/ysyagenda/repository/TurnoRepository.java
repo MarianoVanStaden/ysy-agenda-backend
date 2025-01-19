@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface TurnoRepository extends CrudRepository<Turno, Long> {
     List<Turno> findByFechaBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
-}
+    List<Turno> findByProfesionalId(Long profesionalId);
+    }
+
