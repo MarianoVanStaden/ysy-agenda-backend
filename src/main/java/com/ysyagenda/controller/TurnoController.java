@@ -38,4 +38,9 @@ public class TurnoController {
     public void deleteTurno(@PathVariable long id) {
         turnoRepository.deleteById(id);
     }
+    @GetMapping(value = "/profesional/{profesionalId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Iterable<Turno> getTurnosByProfesional(@PathVariable long profesionalId) {
+        return turnoRepository.findByProfesionalId(profesionalId);
+    }
+
 }
