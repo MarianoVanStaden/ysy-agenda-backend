@@ -38,6 +38,7 @@ public class Usuario {
     // Campos específicos por tipo
     private String departamento;  // Para ADMIN
     private String especialidad;  // Para PROFESIONAL
+    private String avatarColor; //Para guardar el color del Avatar
 
     public enum TipoUsuario {
         ADMIN, PACIENTE, PROFESIONAL
@@ -52,4 +53,11 @@ public class Usuario {
         this.contraseña = contraseña;
         this.tipoUsuario = tipoUsuario;
     }
+    public String getAvatarText() {
+        if (nombre != null && apellido != null) {
+            return nombre.substring(0, 1).toUpperCase() + apellido.substring(0, 1).toUpperCase();
+        }
+        return "??";
+    }
+
 }

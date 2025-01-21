@@ -55,6 +55,7 @@ public class UsuarioController {
                 case "dni": usuario.setDni((String) value); break;
                 case "departamento": usuario.setDepartamento((String) value); break;
                 case "especialidad": usuario.setEspecialidad((String) value); break;
+                case "avatarColor": usuario.setAvatarColor((String) value); break;
             }
         });
 
