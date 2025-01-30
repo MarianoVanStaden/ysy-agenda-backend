@@ -31,6 +31,7 @@ public class YsyAgendaBackendApplication extends SpringBootServletInitializer { 
             DisponibilidadRepository disponibilidadRepository) {
         return (args) -> {
             // Primero crear las especialidades
+
             Especialidad cardiologia = especialidadRepository.save(new Especialidad("Cardiología"));
             Especialidad neurologia = especialidadRepository.save(new Especialidad("Neurología"));
             Especialidad pediatria = especialidadRepository.save(new Especialidad("Pediatría"));
@@ -64,6 +65,7 @@ public class YsyAgendaBackendApplication extends SpringBootServletInitializer { 
             disponibilidad1.setHorarioCortado(false);
             disponibilidad1.setFechaInicio(LocalDate.of(2025, 1, 1));
             disponibilidad1.setFechaFin(LocalDate.of(2025, 12, 31));
+            disponibilidad1.setDuracionTurno(20);
 
             // Franjas para disponibilidad1
             FranjaHoraria franja1A = new FranjaHoraria();
@@ -85,7 +87,7 @@ public class YsyAgendaBackendApplication extends SpringBootServletInitializer { 
             disponibilidad2.setHorarioCortado(true);
             disponibilidad2.setFechaInicio(LocalDate.of(2025, 1, 1));
             disponibilidad2.setFechaFin(LocalDate.of(2025, 12, 31));
-
+            disponibilidad2.setDuracionTurno(15);
             // Franja para disponibilidad2
             FranjaHoraria franja2A = new FranjaHoraria();
             franja2A.setHoraInicio(LocalTime.of(9, 0));
@@ -101,7 +103,7 @@ public class YsyAgendaBackendApplication extends SpringBootServletInitializer { 
             disponibilidad3.setHorarioCortado(false);
             disponibilidad3.setFechaInicio(LocalDate.of(2025, 1, 1));
             disponibilidad3.setFechaFin(LocalDate.of(2025, 12, 31));
-
+            disponibilidad1.setDuracionTurno(60);
             // Franja para disponibilidad3
             FranjaHoraria franja3A = new FranjaHoraria();
             franja3A.setHoraInicio(LocalTime.of(14, 0));

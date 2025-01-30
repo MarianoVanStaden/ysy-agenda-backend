@@ -39,6 +39,10 @@ public class Disponibilidad {
 
     @Column(nullable = false)
     private LocalDate fechaFin;
+
+    @Column(nullable = false)
+    private Integer duracionTurno = 30;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "disponibilidad",
             cascade = {CascadeType.ALL},
@@ -79,5 +83,12 @@ public class Disponibilidad {
 
     public enum DiaSemana {
         LUNES, MARTES, MIERCOLES, JUEVES, VIERNES, SABADO, DOMINGO
+    }
+
+    public void setDuracionTurno(Integer duracionTurno) {
+        if (duracionTurno <= 0) {
+            throw new IllegalArgumentException("La duración del turno debe ser mayor a 0 minutos.");
+        }
+        this.duracionTurno = duracionTurno;
     }
 }

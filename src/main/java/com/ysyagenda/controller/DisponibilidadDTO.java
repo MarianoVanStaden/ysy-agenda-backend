@@ -22,4 +22,5 @@ public class DisponibilidadDTO {
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     private List<FranjaHorariaDTO> franjasHorarias;
+    private Integer duracionTurno;
 }

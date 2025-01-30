@@ -45,6 +45,7 @@ public class DisponibilidadController {
                     "Solo los usuarios de tipo PROFESIONAL pueden tener disponibilidades.");
         }
 
+        // Modificado para remover duracionTurno del método de búsqueda
         List<Disponibilidad> disponibilidadesExistentes = disponibilidadRepository
                 .findByUsuarioIdAndDiaSemanaAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
                         dto.getUsuarioId(),
@@ -59,6 +60,7 @@ public class DisponibilidadController {
         }
 
         validateFranjasHorarias(dto);
+        validateDuracionTurno(dto.getDuracionTurno());
 
         Disponibilidad disponibilidad = new Disponibilidad();
         disponibilidad.setUsuario(usuario);
@@ -67,12 +69,14 @@ public class DisponibilidadController {
         disponibilidad.setHorarioCortado(dto.isHorarioCortado());
         disponibilidad.setFechaInicio(dto.getFechaInicio());
         disponibilidad.setFechaFin(dto.getFechaFin());
+        disponibilidad.setDuracionTurno(dto.getDuracionTurno());
 
         List<FranjaHoraria> franjas = mapFranjas(dto);
         franjas.forEach(disponibilidad::addFranjaHoraria);
 
         return ResponseEntity.ok(disponibilidadRepository.save(disponibilidad));
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Disponibilidad> updateDisponibilidad(
@@ -83,17 +87,26 @@ public class DisponibilidadController {
                         "Disponibilidad no encontrada"));
 
         validateFranjasHorarias(dto);
+        validateDuracionTurno(dto.getDuracionTurno());
 
         disponibilidad.setDisponible(dto.isDisponible());
         disponibilidad.setHorarioCortado(dto.isHorarioCortado());
         disponibilidad.setFechaInicio(dto.getFechaInicio());
         disponibilidad.setFechaFin(dto.getFechaFin());
-
+        disponibilidad.setDuracionTurno(dto.getDuracionTurno());
         disponibilidad.getFranjasHorarias().clear();
         List<FranjaHoraria> franjas = mapFranjas(dto);
         franjas.forEach(disponibilidad::addFranjaHoraria);
 
         return ResponseEntity.ok(disponibilidadRepository.save(disponibilidad));
+    }
+
+    // Nuevo método de validación para duracionTurno
+    private void validateDuracionTurno(Integer duracionTurno) {
+        if (duracionTurno == null || duracionTurno <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "La duración del turno debe ser mayor a 0 minutos.");
+        }
     }
 
     @DeleteMapping("/{id}")

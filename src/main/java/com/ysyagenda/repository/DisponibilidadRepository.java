@@ -11,6 +11,7 @@ import java.util.List;
 public interface DisponibilidadRepository extends JpaRepository<Disponibilidad, Long> {
     List<Disponibilidad> findByUsuarioId(Long usuarioId);
 
+    // No necesitamos incluir duracionTurno en el método ya que no es parte del criterio de búsqueda
     List<Disponibilidad> findByUsuarioIdAndDiaSemanaAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
             Long usuarioId,
             Disponibilidad.DiaSemana diaSemana,
