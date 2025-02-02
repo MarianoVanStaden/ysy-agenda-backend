@@ -25,12 +25,15 @@ public class Usuario {
     @NotEmpty
     private String dni;
 
+    @NotEmpty
+    private String celular;
+
     @Email
     @NotEmpty
     private String email;
 
     @NotEmpty
-    private String contraseña;
+    private String contrasenia;
 
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipoUsuario;
@@ -44,13 +47,14 @@ public class Usuario {
         ADMIN, PACIENTE, PROFESIONAL
     }
 
-    public Usuario(String nombre, String apellido, String dni, String email,
-                   String contraseña, TipoUsuario tipoUsuario) {
+    public Usuario(String nombre, String apellido, String dni, String celular, String email,
+                   String contrasenia, TipoUsuario tipoUsuario) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
+        this.celular = celular;
         this.email = email;
-        this.contraseña = contraseña;
+        this.contrasenia = contrasenia;
         this.tipoUsuario = tipoUsuario;
     }
     public String getAvatarText() {

@@ -53,6 +53,7 @@ public class UsuarioController {
                 case "apellido": usuario.setApellido((String) value); break;
                 case "email": usuario.setEmail((String) value); break;
                 case "dni": usuario.setDni((String) value); break;
+                case "celular": usuario.setCelular((String) value); break;
                 case "departamento": usuario.setDepartamento((String) value); break;
                 case "especialidad": usuario.setEspecialidad((String) value); break;
                 case "avatarColor": usuario.setAvatarColor((String) value); break;
@@ -72,8 +73,8 @@ public class UsuarioController {
         usuarioRepository.deleteById(id);
     }
 
-    @PostMapping("/recuperar-contraseña")
-    public ResponseEntity<Map<String, String>> recuperarContraseña(@RequestParam String email) {
+    @PostMapping("/recuperar-contrasenia")
+    public ResponseEntity<Map<String, String>> recuperarContrasenia(@RequestParam String email) {
         try {
             Usuario usuario = usuarioRepository.findByEmail(email)
                     .orElseThrow(() -> new ResponseStatusException(
@@ -82,12 +83,12 @@ public class UsuarioController {
 
             emailService.sendPasswordResetEmail(
                     usuario.getEmail(),
-                    "Recuperación de contraseña",
-                    buildPasswordEmailBody(usuario.getNombre(), usuario.getContraseña())
+                    "Recuperación de contrasenia",
+                    buildPasswordEmailBody(usuario.getNombre(), usuario.getContrasenia())
             );
 
             Map<String, String> response = new HashMap<>();
-            response.put("message", "Se ha enviado la contraseña a tu correo");
+            response.put("message", "Se ha enviado la contrasenia a tu correo");
             return ResponseEntity.ok(response);
 
         } catch (IncorrectResultSizeDataAccessException e) {
@@ -105,12 +106,12 @@ public class UsuarioController {
         }
     }
 
-    private String buildPasswordEmailBody(String nombre, String contraseña) {
+    private String buildPasswordEmailBody(String nombre, String contrasenia) {
         return String.format(
                 "Estimado/a %s,\n\n" +
-                        "Tu contraseña es: %s\n\n" +
+                        "Tu contrasenia es: %s\n\n" +
                         "Si no solicitaste este cambio, ignora este correo.",
-                nombre, contraseña);
+                nombre, contrasenia);
     }
 }
 
