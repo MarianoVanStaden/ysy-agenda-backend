@@ -38,6 +38,10 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipoUsuario;
 
+    @ManyToOne
+    @JoinColumn(name = "clinica_id", nullable = false)
+    private Clinica clinica;
+
     // Campos específicos por tipo
     private String departamento;  // Para ADMIN
     private String especialidad;  // Para PROFESIONAL

@@ -29,22 +29,30 @@ public class UsuarioController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Iterable<Usuario> getUsuarios(@RequestParam(required = false) Usuario.TipoUsuario tipo) {
-        return tipo == null ? usuarioRepository.findAll() :
-                usuarioRepository.findByTipoUsuario(tipo);
+    public Iterable<Usuario> getUsuarios(
+            @RequestParam Long clinicaId,
+            @RequestParam(required = false) Usuario.TipoUsuario tipo) {
+        return tipo == null ? usuarioRepository.findByClinicaId(clinicaId) :
+                usuarioRepository.findByTipoUsuarioAndClinicaId(tipo, clinicaId);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Usuario getUsuario(@PathVariable long id) {
+    public Usuario getUsuario(@PathVariable long id, @RequestParam Long clinicaId) {
         return usuarioRepository.findById(id)
+                .filter(u -> u.getClinica().getId().equals(clinicaId))
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("Usuario con id %s no encontrado", id)));
+                        HttpStatus.NOT_FOUND, "Usuario no encontrado en la clínica especificada"));
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Usuario createUsuario(@Valid @RequestBody Usuario usuario) {
+        return usuarioRepository.save(usuario);
     }
 
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Usuario updateUsuario(@PathVariable long id, @RequestBody Map<String, Object> updates) {
+    public Usuario updateUsuario(@PathVariable long id, @RequestParam Long clinicaId, @RequestBody Map<String, Object> updates) {
         Usuario usuario = usuarioRepository.findById(id)
+                .filter(u -> u.getClinica().getId().equals(clinicaId))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
         updates.forEach((key, value) -> {
@@ -63,55 +71,40 @@ public class UsuarioController {
         return usuarioRepository.save(usuario);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Usuario createUsuario(@Valid @RequestBody Usuario usuario) {
-        return usuarioRepository.save(usuario);
-    }
-
     @DeleteMapping("/{id}")
-    public void deleteUsuario(@PathVariable long id) {
-        usuarioRepository.deleteById(id);
+    public void deleteUsuario(@PathVariable long id, @RequestParam Long clinicaId) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .filter(u -> u.getClinica().getId().equals(clinicaId))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+        usuarioRepository.delete(usuario);
     }
 
     @PostMapping("/recuperar-contrasenia")
-    public ResponseEntity<Map<String, String>> recuperarContrasenia(@RequestParam String email) {
+    public ResponseEntity<Map<String, String>> recuperarContrasenia(@RequestParam String email, @RequestParam Long clinicaId) {
         try {
-            Usuario usuario = usuarioRepository.findByEmail(email)
-                    .orElseThrow(() -> new ResponseStatusException(
-                            HttpStatus.NOT_FOUND,
-                            String.format("Usuario con email %s no encontrado", email)));
+            Usuario usuario = usuarioRepository.findByEmailAndClinicaId(email, clinicaId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
             emailService.sendPasswordResetEmail(
                     usuario.getEmail(),
-                    "Recuperación de contrasenia",
+                    "Recuperación de contraseña",
                     buildPasswordEmailBody(usuario.getNombre(), usuario.getContrasenia())
             );
 
             Map<String, String> response = new HashMap<>();
-            response.put("message", "Se ha enviado la contrasenia a tu correo");
+            response.put("message", "Se ha enviado la contraseña a tu correo");
             return ResponseEntity.ok(response);
 
         } catch (IncorrectResultSizeDataAccessException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Múltiples cuentas encontradas para el correo proporcionado",
-                    e);
-        } catch (ResponseStatusException e) {
-            throw e;
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Múltiples cuentas encontradas", e);
         } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Error al procesar la solicitud",
-                    e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en la solicitud", e);
         }
     }
 
     private String buildPasswordEmailBody(String nombre, String contrasenia) {
         return String.format(
-                "Estimado/a %s,\n\n" +
-                        "Tu contrasenia es: %s\n\n" +
-                        "Si no solicitaste este cambio, ignora este correo.",
+                "Estimado/a %s,\n\nTu contraseña es: %s\n\nSi no solicitaste este cambio, ignora este correo.",
                 nombre, contrasenia);
     }
 }
-
