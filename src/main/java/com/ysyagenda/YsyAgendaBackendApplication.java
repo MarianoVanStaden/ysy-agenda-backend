@@ -37,14 +37,23 @@ public class YsyAgendaBackendApplication extends SpringBootServletInitializer { 
             Especialidad pediatria = especialidadRepository.save(new Especialidad("Pediatría"));
 
             //Crear 3 usuarios ADMIN
-            usuarioRepository.save(new Usuario("Marian", "Van Staden", "000", "02235636363", "admin1@example.com", "000", Usuario.TipoUsuario.ADMIN));
-            usuarioRepository.save(new Usuario("Admin2", "Garcia", "22222222", "0115484784", "admin2@example.com", "AdminPass2", Usuario.TipoUsuario.ADMIN));
-            usuarioRepository.save(new Usuario("Admin3", "Lopez", "33333333", "0112356823", "admin3@example.com", "AdminPass3", Usuario.TipoUsuario.ADMIN));
+            usuarioRepository.save(new Usuario("Mariano", "Van Staden", "000", "02235636363", "mariano@example.com", "000", Usuario.TipoUsuario.ADMIN));
+            usuarioRepository.save(new Usuario("Marcela", "Garcia", "30321654", "0115484784", "marcela@example.com", "AdminPass2", Usuario.TipoUsuario.ADMIN));
+            usuarioRepository.save(new Usuario("Josefina", "Robert", "30321653", "0112356823", "josefina@example.com", "AdminPass3", Usuario.TipoUsuario.ADMIN));
+            usuarioRepository.save(new Usuario("Pedro", "Haberkorn", "30321652", "02235636363", "pedro@example.com", "000", Usuario.TipoUsuario.ADMIN));
+            usuarioRepository.save(new Usuario("Juan Manuel", "Ojeda", "30321651", "0115484784", "juanmanuel@example.com", "AdminPass2", Usuario.TipoUsuario.ADMIN));
+            usuarioRepository.save(new Usuario("Fernanda", "Gimenez", "30321650", "0112356823", "fernanda@example.com", "AdminPass3", Usuario.TipoUsuario.ADMIN));
 
             // Crear 3 usuarios PACIENTE
-            usuarioRepository.save(new Usuario("Valen", "Leoz", "111", "02235789858", "paciente1@example.com", "111", Usuario.TipoUsuario.PACIENTE));
-            usuarioRepository.save(new Usuario("Paciente2", "Fernandez", "55555555", "2235616161", "paciente2@example.com", "PacientePass2", Usuario.TipoUsuario.PACIENTE));
-            usuarioRepository.save(new Usuario("Paciente3", "Rodriguez", "66666666", "2235616161", "paciente3@example.com", "PacientePass3", Usuario.TipoUsuario.PACIENTE));
+            usuarioRepository.save(new Usuario("Valen", "Leoz", "111", "02235789858", "valen@example.com", "111", Usuario.TipoUsuario.PACIENTE));
+            usuarioRepository.save(new Usuario("Federico", "Leloir", "201784526", "2235616161", "federico@example.com", "PacientePass2", Usuario.TipoUsuario.PACIENTE));
+            usuarioRepository.save(new Usuario("Sigmund", "Freud", "201784527", "2235616161", "freud@example.com", "PacientePass3", Usuario.TipoUsuario.PACIENTE));
+            usuarioRepository.save(new Usuario("Martin", "Campos", "201784528", "02235789858", "martin@example.com", "111", Usuario.TipoUsuario.PACIENTE));
+            usuarioRepository.save(new Usuario("Sabrina", "Fernandez", "201784529", "2235616161", "sabrina@example.com", "PacientePass2", Usuario.TipoUsuario.PACIENTE));
+            usuarioRepository.save(new Usuario("Mía", "Tanner", "201784530", "2235616161", "mia@example.com", "PacientePass3", Usuario.TipoUsuario.PACIENTE));
+            usuarioRepository.save(new Usuario("Edgar", "Poe", "201784528", "02235789858", "edgar@example.com", "111", Usuario.TipoUsuario.PACIENTE));
+            usuarioRepository.save(new Usuario("Gabriel", "Marquez", "201784529", "2235616161", "gabriel@example.com", "PacientePass2", Usuario.TipoUsuario.PACIENTE));
+            usuarioRepository.save(new Usuario("Manuel", "Alfonzo", "201784530", "2235616161", "manuel@example.com", "PacientePass3", Usuario.TipoUsuario.PACIENTE));
 
             // Crear usuarios profesionales vinculados a las especialidades
             Usuario profesional1 = new Usuario("Martu", "Palleiro", "999", "0223123456", "profesional1@example.com", "999", Usuario.TipoUsuario.PROFESIONAL);
