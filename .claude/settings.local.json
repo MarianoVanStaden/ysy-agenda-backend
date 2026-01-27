@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs ls:*)",
+      "Bash(./gradlew:*)",
+      "Bash(java -version:*)",
+      "Bash(where:*)",
+      "Bash(choco install:*)",
+      "Bash(powershell.exe -Command \"choco install temurin8 -y\")",
+      "Bash(powershell.exe -Command \"winget install EclipseAdoptium.Temurin.8.JDK --accept-source-agreements --accept-package-agreements\")",
+      "Bash(powershell.exe -Command \"Get-ChildItem -Path ''C:\\\\Program Files\\\\Eclipse Adoptium'' -Directory | Select-Object -ExpandProperty FullName\")",
+      "Bash(JAVA_HOME=\"/c/Program Files/Eclipse Adoptium/jdk-8.0.472.8-hotspot\" ./gradlew:*)"
+    ]
+  }
+}

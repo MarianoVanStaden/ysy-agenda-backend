@@ -11,7 +11,8 @@ import java.util.List;
 public interface DisponibilidadRepository extends JpaRepository<Disponibilidad, Long> {
     List<Disponibilidad> findByUsuarioId(Long usuarioId);
 
-    // No necesitamos incluir duracionTurno en el método ya que no es parte del criterio de búsqueda
+    // Busca disponibilidades que se solapan con un rango de fechas dado
+    // Usado para validar solapamientos al crear disponibilidades
     List<Disponibilidad> findByUsuarioIdAndDiaSemanaAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
             Long usuarioId,
             Disponibilidad.DiaSemana diaSemana,

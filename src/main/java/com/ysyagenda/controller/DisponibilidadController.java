@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,54 @@ public class DisponibilidadController {
     @GetMapping("/{usuarioId}")
     public ResponseEntity<List<Disponibilidad>> getDisponibilidadUsuario(@PathVariable Long usuarioId) {
         return ResponseEntity.ok(disponibilidadRepository.findByUsuarioId(usuarioId));
+    }
+
+    /**
+     * Obtiene las disponibilidades vigentes para un profesional en una fecha específica.
+     * Filtra por:
+     * - usuarioId: ID del profesional
+     * - fecha: La fecha debe estar dentro del rango [fechaInicio, fechaFin]
+     * - diaSemana: Se calcula automáticamente a partir de la fecha
+     */
+    @GetMapping("/{usuarioId}/fecha/{fecha}")
+    public ResponseEntity<List<Disponibilidad>> getDisponibilidadPorFecha(
+            @PathVariable Long usuarioId,
+            @PathVariable String fecha) {
+
+        LocalDate fechaConsulta;
+        try {
+            fechaConsulta = LocalDate.parse(fecha);
+        } catch (DateTimeParseException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Formato de fecha inválido. Use el formato YYYY-MM-DD");
+        }
+
+        // Convertir DayOfWeek de Java a nuestro enum DiaSemana
+        Disponibilidad.DiaSemana diaSemana = convertirDiaSemana(fechaConsulta.getDayOfWeek());
+
+        // Buscar disponibilidades donde fechaInicio <= fecha <= fechaFin y coincida el día
+        List<Disponibilidad> disponibilidades = disponibilidadRepository
+                .findByUsuarioIdAndDiaSemanaAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
+                        usuarioId,
+                        diaSemana,
+                        fechaConsulta,  // fechaInicio <= fechaConsulta
+                        fechaConsulta   // fechaFin >= fechaConsulta
+                );
+
+        return ResponseEntity.ok(disponibilidades);
+    }
+
+    private Disponibilidad.DiaSemana convertirDiaSemana(DayOfWeek dayOfWeek) {
+        switch (dayOfWeek) {
+            case MONDAY: return Disponibilidad.DiaSemana.LUNES;
+            case TUESDAY: return Disponibilidad.DiaSemana.MARTES;
+            case WEDNESDAY: return Disponibilidad.DiaSemana.MIERCOLES;
+            case THURSDAY: return Disponibilidad.DiaSemana.JUEVES;
+            case FRIDAY: return Disponibilidad.DiaSemana.VIERNES;
+            case SATURDAY: return Disponibilidad.DiaSemana.SABADO;
+            case SUNDAY: return Disponibilidad.DiaSemana.DOMINGO;
+            default: throw new IllegalArgumentException("Día de semana no válido");
+        }
     }
 
     @PostMapping
