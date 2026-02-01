@@ -13,6 +13,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .cors() // habilita CORS
+                .and()
                 .authorizeRequests()
                 .anyRequest().permitAll() // permite el acceso a todas las rutas sin autenticación
                 .and()

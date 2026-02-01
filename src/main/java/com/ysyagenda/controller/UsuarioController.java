@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import org.mindrot.jbcrypt.BCrypt;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -71,6 +72,26 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     public void deleteUsuario(@PathVariable long id) {
         usuarioRepository.deleteById(id);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> credentials) {
+        String dni = credentials.get("dni");
+        String contrasenia = credentials.get("contrasenia");
+
+        Usuario usuario = usuarioRepository.findByDni(dni)
+                .orElse(null);
+
+        Map<String, Object> response = new HashMap<>();
+
+        if (usuario != null && BCrypt.checkpw(contrasenia, usuario.getContrasenia())) {
+            response.put("authenticated", true);
+            response.put("usuario", usuario);
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("authenticated", false);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
     }
 
     @PostMapping("/recuperar-contrasenia")
