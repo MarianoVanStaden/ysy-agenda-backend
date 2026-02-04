@@ -9,6 +9,12 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(
+    uniqueConstraints = @UniqueConstraint(
+        name = "uk_turno_profesional_fecha",
+        columnNames = {"profesional_id", "fecha"}
+    )
+)
 @Getter
 @ToString
 @NoArgsConstructor

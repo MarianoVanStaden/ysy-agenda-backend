@@ -11,5 +11,6 @@ import java.util.List;
 public interface TurnoRepository extends CrudRepository<Turno, Long> {
     List<Turno> findByFechaBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
     List<Turno> findByProfesionalId(Long profesionalId);
-    }
+    boolean existsByProfesionalIdAndFecha(Long profesionalId, LocalDateTime fecha);
+}
 
